@@ -1,4 +1,5 @@
 import re
+import sys
 
 class BFCompiler(object):
 
@@ -10,10 +11,18 @@ class BFCompiler(object):
         self.errors = []
         
         # Errors:
-        #   -1: Invalid program character
-        #   -2: Pointer out of bounds
-        #   -3: Invalid input character
-        #   -4: Invalid value
+        #   0: Invalid program character
+        #   1: Pointer out of bounds
+        #   2: Invalid input character
+        #   3: Invalid value
+        #   4: Bracket not closed
+        
+        self.errorMessages = [
+            "Invalid program character",
+            "Pointer out of bounds",
+            "Invalid input character",
+            "Invalid value",
+            "Bracket not closed"]
 
     def parseBF(self, sourceCode):
         # Remove comments
@@ -21,46 +30,63 @@ class BFCompiler(object):
         self.sourceCode = sourceCode
         
         while self.instPointer < len(sourceCode):
-            char = self.sourceCode[self.instPointer]
-            if char == '>' or char == '<':
-                self.pointerMovement(char)
-                self.instPointer += 1
-            elif char == '+' or char == '-':
-                self.changeValue(char)
-                self.instPointer += 1
-            elif char == '.':
-                self.showOutput()
-                self.instPointer += 1
-            elif char == ',':
-                self.takeInput()
-                self.instPointer += 1
-            elif char == '[':
-                self.instPointer += 1
-                self.execLoop()
-            else:
-                self.errors.append(-1)
+            self.execNextCommand()
 
+    def findMatchingBracket(self, openBracketPos):
+        num = 0
+        closeBracketPos = -1
+        for i in range(openBracketPos, len(self.sourceCode)):
+            char = self.sourceCode[i]
+            if char == '[':
+                num += 1
+            elif char == ']':
+                num -= 1
+            if num == 0:
+                closeBracketPos = i
+                
+        if num != 0:  
+            self.errors.append(4)
+            
+        return closeBracketPos
+
+        
     def execLoop(self):
-        while self.sourceCode[self.instPointer] != ']':
-            char = self.sourceCode[self.instPointer]
-            if char == '>' or char == '<':
-                self.pointerMovement(char)
-                self.instPointer += 1
-            elif char == '+' or char == '-':
-                self.changeValue(char)
-                self.instPointer += 1
-            elif char == '.':
-                self.showOutput()
-                self.instPointer += 1
-            elif char == ',':
-                self.takeInput()
-                self.instPointer += 1
-            elif char == '[':
-                self.instPointer += 1
-                self.execLoop()
-            else:
-                self.errors.append(-1)
+        loopStart = self.instPointer - 1
+        loopEnd = self.findMatchingBracket
+
+        while self.tape[self.dataPointer] != 0:
+            while self.sourceCode[self.instPointer] != ']':
+                self.execNextCommand()
+                
+            self.instPointer = loopStart
+            
         self.instPointer += 1
+        
+    def execNextCommand(self):
+        print(self.instPointer)
+        print(self.dataPointer)
+        print(self.tape)
+
+        if self.errors:
+            for error in self.errors:
+                print(self.errorMessages[error])
+            sys.exit()
+        char = self.sourceCode[self.instPointer]
+        self.instPointer += 1
+
+        if char == '>' or char == '<':
+            self.pointerMovement(char)
+        elif char == '+' or char == '-':
+            self.changeValue(char)
+        elif char == '.':
+            self.showOutput()
+        elif char == ',':
+            self.takeInput()
+        elif char == '[':
+            self.execLoop()
+        else:
+            self.errors.append(0)
+
 
     def pointerMovement(self, command):
         # command - string, either < or >
@@ -70,7 +96,7 @@ class BFCompiler(object):
             self.dataPointer -= 1
 
         if self.dataPointer < 0 or self.dataPointer > len(self.tape):
-            self.errors.append(-2)
+            self.errors.append(1)
 
     def changeValue(self, command):
         # command - string, either + or -
@@ -80,7 +106,7 @@ class BFCompiler(object):
             self.tape[self.dataPointer] -= 1
 
         if self.tape[self.dataPointer] < 0:
-            self.errors.append(-4)
+            self.errors.append(3)
 
     def showOutput(self):
         print(chr(self.tape[self.dataPointer]))
@@ -100,3 +126,4 @@ sourceCode = """+++++++++[>++++++++++<-]>."""
 
 bfc = BFCompiler()
 bfc.parseBF(sourceCode)
+print("Program complete")
