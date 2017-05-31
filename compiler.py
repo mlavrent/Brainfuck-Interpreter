@@ -54,7 +54,6 @@ class BFCompiler(object):
     def execLoop(self):
         loopStart = self.instPointer - 1
         loopEnd = self.findMatchingBracket(loopStart)
-        print("Loop end " + str(loopEnd))
 
         while self.tape[self.dataPointer] != 0:
             while self.sourceCode[self.instPointer] != ']':
@@ -112,7 +111,7 @@ class BFCompiler(object):
             self.errors.append(3)
 
     def showOutput(self):
-        print(chr(self.tape[self.dataPointer]))
+        print(chr(self.tape[self.dataPointer]), end='')
 
     def takeInput(self):
         inVal = input("Input: ")
@@ -125,7 +124,9 @@ class BFCompiler(object):
     
 
 
-sourceCode = """+++++++++[>++++++++++<-]>."""
+sourceCode = """++++++++++[>+++++++>++++++++++>+++>+<<<<-]
+>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.---
+-----.>+.>."""
 
 bfc = BFCompiler()
 bfc.parseBF(sourceCode)
