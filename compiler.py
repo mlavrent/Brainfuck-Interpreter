@@ -9,8 +9,9 @@ class BFcompiler(object):
         self.errors = []
         
         # Errors:
-        #   -1: Invalid character
+        #   -1: Invalid program character
         #   -2: Pointer out of bounds
+        #   -3: Invalid input character
 
     def parseBF(sourceCode):
         # Remove comments
@@ -32,6 +33,15 @@ class BFcompiler(object):
 
     def showOutput():
         print(chr(self.tape[self.dataPointer]))
+
+    def takeInput():
+        inVal = input("Input: ")
+        value = inVal[0]
+
+        if ord(value) < 0:
+            errors.append(-3)
+
+        self.tape[self.dataPointer] = ord(value)
     
 
 
