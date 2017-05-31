@@ -43,6 +43,7 @@ class BFCompiler(object):
                 num -= 1
             if num == 0:
                 closeBracketPos = i
+                break
                 
         if num != 0:  
             self.errors.append(4)
@@ -52,20 +53,22 @@ class BFCompiler(object):
         
     def execLoop(self):
         loopStart = self.instPointer - 1
-        loopEnd = self.findMatchingBracket
+        loopEnd = self.findMatchingBracket(loopStart)
+        print("Loop end " + str(loopEnd))
 
         while self.tape[self.dataPointer] != 0:
             while self.sourceCode[self.instPointer] != ']':
                 self.execNextCommand()
+                #print(self.instPointer)
                 
-            self.instPointer = loopStart
+            self.instPointer = loopStart + 1
             
-        self.instPointer += 1
+        self.instPointer = loopEnd + 1
         
     def execNextCommand(self):
-        print(self.instPointer)
-        print(self.dataPointer)
-        print(self.tape)
+        #print(self.instPointer)
+        #print(self.dataPointer)
+        #print(self.tape)
 
         if self.errors:
             for error in self.errors:
