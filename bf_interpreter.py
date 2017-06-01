@@ -124,10 +124,18 @@ class BFCompiler(object):
     
 
 
-sourceCode = """++++++++++[>+++++++>++++++++++>+++>+<<<<-]
->++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.---
------.>+.>."""
+sourceCode = """
+++++++[>+++++++++++<-]>.< Print B
+++++++[>++++++++<-]>.< Print r
+++++[>----<-]>-. Print a
+++++++++. Print i
++++++. Print n
+--------. Print f
+<+++[>+++++<-]>. Print u
+<+++[>------<-]>. Print c
+++++++++. Print k
+"""
 
 bfc = BFCompiler()
 bfc.parseBF(sourceCode)
-print("Program complete")
+print("\nProgram complete")
