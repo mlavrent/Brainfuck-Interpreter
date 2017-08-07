@@ -123,19 +123,19 @@ class BFCompiler(object):
         self.tape[self.dataPointer] = ord(value)
     
 
+if __name__ == "__main__":
+    sourceCode = """
+    ++++++[>+++++++++++<-]>.< Print B
+    ++++++[>++++++++<-]>.< Print r
+    ++++[>----<-]>-. Print a
+    ++++++++. Print i
+    +++++. Print n
+    --------. Print f
+    <+++[>+++++<-]>. Print u
+    <+++[>------<-]>. Print c
+    ++++++++. Print k
+    """
 
-sourceCode = """
-++++++[>+++++++++++<-]>.< Print B
-++++++[>++++++++<-]>.< Print r
-++++[>----<-]>-. Print a
-++++++++. Print i
-+++++. Print n
---------. Print f
-<+++[>+++++<-]>. Print u
-<+++[>------<-]>. Print c
-++++++++. Print k
-"""
-
-bfc = BFCompiler()
-bfc.parseBF(sourceCode)
-print("\nProgram complete")
+    bfc = BFCompiler()
+    bfc.parseBF(sourceCode)
+    print("\nProgram complete")
